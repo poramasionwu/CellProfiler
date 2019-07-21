@@ -1,0 +1,132 @@
+
+====
+ # testing
+
+ python setup.py test
+
+=====
+
+
+# install
+
+
+# https://github.com/CellProfiler/CellProfiler/wiki/Source-installation-%28OS-X-and-macOS%29
+
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew cask install java
+brew install mysql
+brew install python@2
+brew install wxpython
+# Set up venv first! (add a python interpreter)
+pip2 install cython matplotlib numpy scipy
+
+# https://forum.image.sc/t/source-installation-macos-10-12-6-issue/13127/5
+# Especially do this
+brew cask uninstall java
+
+# Once you’re done, try to install Java from a .dmg file from here:
+# http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html 45
+# choose [macOS	247.06 MB jdk-8u151-macosx-x64.dmg]
+
+# https://github.com/CellProfiler/CellProfiler/issues/3711
+
+# I found out that in some user who has Java 9.0.1, removing Java by these 3 lines solves the problems:
+
+sudo rm -fr /Library/Java/JavaVirtualMachines/jdk-9.jdk/
+sudo rm -fr /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin
+sudo rm -fr /Library/PreferencePanes/JavaControlPanel.prefPane
+
+
+pip install python-bioformats
+
+
+Eventually at had to add the following lines to my .bashrc for cellprofiler to work on my Mac Pro (with macOS Mojave 10.14.2). But I am still uncertain as to what exactly was the trick...
+
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_221.jdk/Contents/Home"
+export PATH="$JAVA_HOME/bin:$PATH"
+export CFLAGS="-I/usr/local/lib/python2.7/site-packages/numpy/core/include/"
+export JENV_ROOT="/usr/local/bin/jenv"
+
+#Also run the above in the terminal
+
+pip install javabridge
+
+
+# git clone https://github.com/CellProfiler/CellProfiler.git $HOME/CellProfiler
+#pip2 install --editable $HOME/CellProfiler
+pip2 install --editable ./
+
+# pip2 uninstall distribute
+# pip2 install setuptools
+
+
+===
+
+Running CellProfiler
+$ Cellprofiler
+Running CellProfiler’s test suite:
+$ cd $HOME/CellProfiler
+
+$ python setup.py test
+Packaging CellProfiler:
+$ cd $HOME/CellProfiler
+
+$ python setup.py py2app
+
+
+======
+# Sync repo
+
+Use the command git remote add to add the original CellProfiler repository as a remote repository called upstream:
+
+git remote add upstream https://github.com/CellProfiler/CellProfiler
+
+Ensure your CellProfiler repository is up to date. This is the only time we suggest pushing changes to the master branch of your repository. First, ensure you have no local changes by running git status on the master branch:
+$ git checkout master
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+nothing to commit, working tree clean
+Run the following commands to ensure your repository is up to date with the upstream repository:
+
+$ git fetch upstream
+$ git merge upstream/master
+$ git push origin master
+Your master branch is now updated to match ours. We recommend performing this step often, especially before creating a new branch.
+
+======
+# contrib
+# https://github.com/poramasionwu/CellProfiler/blob/master/CONTRIBUTING.md
+
+Create a branch using the issue number. We prefer branches which are named in the format "issues/ISSUE_NUMBER". This helps us track with issues are resolved and should be closed. Use the git checkout command to create a new branch and switch to it:
+
+$ git checkout -b issues/ISSUE_NUMBER
+$ git add -u .
+$ git commit -m MESSAGE
+$ git add FILENAME
+
+
+$ git push origin issues/ISSUE_NUMBER
+
+
+This step is required before you can make a pull request. Additionally, we recommend doing this often so you won't lose your work if you lose access to your workstation.
+
+Create a pull request when you're ready to have your changes reviewed. Find your branch on your GitHub project page by navigating to:
+https://github.com/YOUR-USERNAME/CellProfiler/branches
+Substitute YOUR-USERNAME with your GitHub user name.
+
+Click "New Pull Request" to generate a pull request. Enter a suitable title in the "Title" field. Provide a description of your change in the "Leave a comment" field.
+
+Ensure you are creating a pull request on our project. Click the "compare across forks" link above the "Title" field. Ensure the "base fork" drop-down is set to "CellProfiler/CellProfiler" and the "base" branch drop-down is set to "master". See Creating a pull request from a fork for more information.
+
+When you are ready, click "Create pull request".
+
+Respond to feedback from maintainers. After a pull request is submitted it will be reviewed by CellProfiler maintainers. Be prepared to make revisions to your pull request before it is accepted.
+
+Update your repository with your accepted change. Once accepted, your change is in the CellProfiler project's master branch. You can update your master branch by running the following commands:
+
+$ git checkout master
+$ git fetch upstream
+$ git merge upstream/master
+$ git push origin master
+Your master branch now includes your change. Congratulations on a successful contribution!
